@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && npm run beautify && npm run uglify",
-    "beautify": "uglifyjs ./built/module.js -o ./built/module.ggb.js -b \"quote_style=1\"",
-    "uglify": "uglifyjs ./built/module.js -m -o ./built/module.ggb.min.js -b \"beautify=false,quote_style=1\"",
+    "beautify": "uglifyjs ./dist/module.js -o ./dist/module.ggb.js -b \"quote_style=1\"",
+    "uglify": "uglifyjs ./dist/module.js -m -o ./dist/module.ggb.min.js -b \"beautify=false,quote_style=1\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dylan Groeneveld",
