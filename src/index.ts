@@ -3,4 +3,9 @@ namespace Oogebra {
   log('OogebraCore sucessfully loaded!')
 }
 
-Object.defineProperty(this, 'Oogebra', { value: Oogebra });
+declare const global: any;
+if (!global.hasOwnProperty('Oogebra')) {
+  Object.defineProperty(global, 'Oogebra', {
+    value: Oogebra
+  });
+}
