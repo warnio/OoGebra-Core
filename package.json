@@ -1,9 +1,10 @@
 {
   "name": "oogebra-core",
-  "version": "1.0.0",
-  "description": "The core for oogebra",
+  "version": "0.1.0",
+  "description": "The core for Oogebra",
   "private": true,
   "main": "index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "build": "tsc && npm run beautify && npm run uglify",
     "beautify": "uglifyjs ./dist/module.js -o ./dist/module.ggb.js -b \"quote_style=1\"",
