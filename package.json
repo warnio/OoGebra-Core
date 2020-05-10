@@ -1,0 +1,20 @@
+{
+  "name": "oogebra-core",
+  "version": "1.0.0",
+  "description": "The core for oogebra",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && npm run beautify && npm run uglify",
+    "beautify": "uglifyjs ./built/module.js -o ./built/module.ggb.js -b \"quote_style=1\"",
+    "uglify": "uglifyjs ./built/module.js -m -o ./built/module.ggb.min.js -b \"beautify=false,quote_style=1\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dylan Groeneveld",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.8.3",
+    "uglify-js": "^3.9.2"
+  },
+  "dependencies": {}
+}
