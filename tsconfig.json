@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "alwaysStrict": true,
+    "sourceMap": false,
+    "target": "es5",
+
+    "declaration": true,
+    "outFile": "built/module.js"
+  },
+  "files": [
+    "src/geogebra/index.d.ts",
+    "src/util/base.ts",
+    "src/util/listeners.ts",
+    "src/util/data.ts",
+    "src/util/immutable.ts",
+    "src/core.ts",
+    "src/index.ts"
+  ]
+}
