@@ -1,7 +1,7 @@
 {
   "name": "oogebra-core",
   "version": "0.2.0",
-  "description": "The core for Oogebra",
+  "description": "The core for OoGebra",
   "main": "index.js",
   "types": "./index.d.ts",
   "repository": "github:warnio/OoGebra-Core",
