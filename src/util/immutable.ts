@@ -16,46 +16,30 @@ namespace OoGebra {
     }
 
     const OnRenameListener = registerListener(OnRename, (oldObjName: string, _objName: string) => {
-      if (!shouldIgnoreImmutable()) {
-        let immutableObjNames: string[] = getData(Key) || [];
-        let isImmutable = immutableObjNames.indexOf(oldObjName) > -1;
-        if (isImmutable) {
-          ggbApplet.undo();
-        }
+      if (!shouldIgnoreImmutable() && getImmutable(oldObjName)) {
+        ggbApplet.undo();
       }
     })
 
     const OnUpdateListener = registerListener(OnUpdate, (objName: string) => {
-      if (!shouldIgnoreImmutable()) {
-        let immutableObjNames: string[] = getData(Key) || [];
-        let isImmutable = immutableObjNames.indexOf(objName) > -1;
-        if (isImmutable) {
-          ggbApplet.undo();
-        }
+      if (!shouldIgnoreImmutable() && getImmutable(objName)) {
+        ggbApplet.undo();
       }
     })
 
     const OnRemoveListener = registerListener(OnRemove, (objName: string) => {
-      if (!shouldIgnoreImmutable()) {
-        const immutableObjNames: string[] = getData(Key) || [];
-        const isImmutable = immutableObjNames.indexOf(objName) > -1;
-        if (isImmutable) {
-          ggbApplet.undo();
-        }
+      if (!shouldIgnoreImmutable() && getImmutable(objName)) {
+        ggbApplet.undo();
       }
     })
 
     const OnClientListener = registerListener(OnClient, (type: string, target: string, _argument: string) => {
-      if (!shouldIgnoreImmutable()) {
-        const immutableObjNames: string[] = getData(Key) || [];
-        const isImmutable = immutableObjNames.indexOf(target) > -1;
-        if (isImmutable) {
-          if (type === 'updateStyle') {
-            ggbApplet.undo();
-          }
-          if (type === 'select') {
-            ggbApplet.setUndoPoint();
-          }
+      if (!shouldIgnoreImmutable() && getImmutable(target)) {
+        if (type === 'updateStyle') {
+          ggbApplet.undo();
+        }
+        if (type === 'select') {
+          ggbApplet.setUndoPoint();
         }
       }
     })
@@ -121,6 +105,10 @@ namespace OoGebra {
       }
     }
 
+  }
+
+  export function getImmutable(objName: string) {
+    return Immutable.getObjNames().indexOf(objName) > -1;
   }
 
   export function setIgnoreImmutables(ignore: boolean) {

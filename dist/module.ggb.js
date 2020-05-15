@@ -180,43 +180,27 @@ var OoGebra;
             return OoGebra.getMode() === 'development' || Immutable.ignoreExplicitly;
         }
         var OnRenameListener = OoGebra.registerListener(OnRename, function(oldObjName, _objName) {
-            if (!shouldIgnoreImmutable()) {
-                var immutableObjNames = OoGebra.getData(Key) || [];
-                var isImmutable = immutableObjNames.indexOf(oldObjName) > -1;
-                if (isImmutable) {
-                    ggbApplet.undo();
-                }
+            if (!shouldIgnoreImmutable() && getImmutable(oldObjName)) {
+                ggbApplet.undo();
             }
         });
         var OnUpdateListener = OoGebra.registerListener(OnUpdate, function(objName) {
-            if (!shouldIgnoreImmutable()) {
-                var immutableObjNames = OoGebra.getData(Key) || [];
-                var isImmutable = immutableObjNames.indexOf(objName) > -1;
-                if (isImmutable) {
-                    ggbApplet.undo();
-                }
+            if (!shouldIgnoreImmutable() && getImmutable(objName)) {
+                ggbApplet.undo();
             }
         });
         var OnRemoveListener = OoGebra.registerListener(OnRemove, function(objName) {
-            if (!shouldIgnoreImmutable()) {
-                var immutableObjNames = OoGebra.getData(Key) || [];
-                var isImmutable = immutableObjNames.indexOf(objName) > -1;
-                if (isImmutable) {
-                    ggbApplet.undo();
-                }
+            if (!shouldIgnoreImmutable() && getImmutable(objName)) {
+                ggbApplet.undo();
             }
         });
         var OnClientListener = OoGebra.registerListener(OnClient, function(type, target, _argument) {
-            if (!shouldIgnoreImmutable()) {
-                var immutableObjNames = OoGebra.getData(Key) || [];
-                var isImmutable = immutableObjNames.indexOf(target) > -1;
-                if (isImmutable) {
-                    if (type === 'updateStyle') {
-                        ggbApplet.undo();
-                    }
-                    if (type === 'select') {
-                        ggbApplet.setUndoPoint();
-                    }
+            if (!shouldIgnoreImmutable() && getImmutable(target)) {
+                if (type === 'updateStyle') {
+                    ggbApplet.undo();
+                }
+                if (type === 'select') {
+                    ggbApplet.setUndoPoint();
                 }
             }
         });
@@ -276,6 +260,10 @@ var OoGebra;
         }
     }
     OoGebra.setImmutable = setImmutable;
+    function getImmutable(objName) {
+        return Immutable.getObjNames().indexOf(objName) > -1;
+    }
+    OoGebra.getImmutable = getImmutable;
     function setIgnoreImmutables(ignore) {
         Immutable.ignoreExplicitly = ignore;
         if (ignore) {

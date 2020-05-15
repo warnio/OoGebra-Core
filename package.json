@@ -1,6 +1,6 @@
 {
   "name": "oogebra-core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "The core for OoGebra",
   "main": "index.js",
   "types": "./index.d.ts",
@@ -14,8 +14,8 @@
   "author": "Dylan Groeneveld",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^3.8.3",
-    "uglify-js": "^3.9.2"
+    "typescript": "^3.9.2",
+    "uglify-js": "^3.9.3"
   },
   "dependencies": {}
 }

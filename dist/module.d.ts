@@ -19,6 +19,7 @@ declare namespace OoGebra {
 }
 declare namespace OoGebra {
     function setImmutable(objName: string, immutable: boolean): void;
+    function getImmutable(objName: string): boolean;
     function setIgnoreImmutables(ignore: boolean): void;
     function getIgnoreImmutables(): boolean;
 }
