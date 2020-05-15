@@ -1,5 +1,5 @@
 
-namespace Oogebra {
+namespace OoGebra {
 
   export function getMode() {
     return (ggbApplet.exists('development') && ggbApplet.getValue('development')) ? 'development' : 'production';

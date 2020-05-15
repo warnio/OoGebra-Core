@@ -1,5 +1,5 @@
 
-namespace Oogebra {
+namespace OoGebra {
 
   namespace Immutable {
     const Key = 'b31ef8a7-d6de-439c-a283-6dddd9c96ca7';
@@ -9,8 +9,10 @@ namespace Oogebra {
     const OnRemove = '1a2bfcbb-7d60-44af-8813-038769db62f3';
     const OnClient = '0e0bcdc3-a558-49a6-8a4e-87b4dae99cf8';
 
+    export let ignoreExplicitly = false;
+
     function shouldIgnoreImmutable() {
-      return getMode() === "development";
+      return getMode() === "development" || ignoreExplicitly;
     }
 
     const OnRenameListener = registerListener(OnRename, (oldObjName: string, _objName: string) => {
@@ -69,7 +71,7 @@ namespace Oogebra {
     export function registerObjName(objNames: string[], objName: string, immutable: boolean) {
       const objNameIndex = objNames.indexOf(objName);
       if (objNameIndex > -1 && !immutable) {
-        objNames = objNames.splice(objNameIndex, 1);
+        objNames.splice(objNameIndex, 1);
       } else if (objNameIndex < 0 && immutable) {
         objNames.push(objName);
       }
@@ -84,10 +86,10 @@ namespace Oogebra {
     }
 
     export function unregister() {
-      ggbApplet.unregisterRenameListener(OnRename);
-      ggbApplet.unregisterUpdateListener(OnUpdate);
-      ggbApplet.unregisterRemoveListener(OnRemove);
-      ggbApplet.unregisterClientListener(OnClient);
+      ggbApplet.unregisterRenameListener(OnRenameListener);
+      ggbApplet.unregisterUpdateListener(OnUpdateListener);
+      ggbApplet.unregisterRemoveListener(OnRemoveListener);
+      ggbApplet.unregisterClientListener(OnClientListener);
     }
 
     export function load() {
@@ -111,20 +113,27 @@ namespace Oogebra {
 
     Immutable.setObjNames(immObjNames);
 
-    if (noImmutableObjNamesBefore && immObjNames.length > 0) {
-      Immutable.register();
-    } else if (immObjNames.length === 0) {
-      Immutable.unregister();
+    if (!getIgnoreImmutables()) {
+      if (noImmutableObjNamesBefore && immObjNames.length > 0) {
+        Immutable.register();
+      } else if (immObjNames.length === 0) {
+        Immutable.unregister();
+      }
     }
 
   }
 
-  export function ignoreImmutables(ignore: boolean) {
+  export function setIgnoreImmutables(ignore: boolean) {
+    Immutable.ignoreExplicitly = ignore;
     if (ignore) {
       Immutable.unregister();
     } else {
       Immutable.load();
     }
+  }
+
+  export function getIgnoreImmutables() {
+    return Immutable.ignoreExplicitly;
   }
 
   Immutable.load();

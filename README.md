@@ -1,7 +1,7 @@
 
-# Oogebra-Core
+# OoGebra-Core
 
-The core for creating Oogebra modules.
+The core for creating modules with the OoGebra framework.
 
 ## Install
 

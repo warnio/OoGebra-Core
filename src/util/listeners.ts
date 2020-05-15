@@ -1,5 +1,5 @@
 
-namespace Oogebra {
+namespace OoGebra {
 
   const listeners: { [name: string]: Function } = {}
 
@@ -15,7 +15,7 @@ namespace Oogebra {
 
   export function registerListener(name: string, fn: Function) {
     listeners[name] = fn;
-    return `Oogebra.Internal.Listeners.listeners[${JSON.stringify(name)}]`;
+    return `OoGebra.Internal.Listeners.listeners[${JSON.stringify(name)}]`;
   }
 
   export function unregisterListener(name: string) {

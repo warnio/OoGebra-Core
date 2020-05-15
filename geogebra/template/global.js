@@ -1,4 +1,4 @@
-/* Oogebra: initaite oogebra */
+/* OoGebra: initaite */
 Object.defineProperty(this, 'global', {
   value: this
 });
@@ -6,9 +6,9 @@ Object.defineProperty(this, 'global', {
 function enableOogebra() {
   if (global.Oogebra == null || ggbApplet.getValue("reload")) {
     try {
-      eval(ggbApplet.getValueString('OogebraCore_{1.0}') + '')
+      eval(ggbApplet.getValueString('OoGebraCore_{2.0}') + '')
     } catch (e) {
-      alert(e)
+      alert([e.message, 'FileName: ' + e.fileName, 'LineNumber: ' + e.lineNumber].join('\n'))
     }
   }
 }
@@ -16,7 +16,7 @@ enableOogebra();
 /* End */
 
 function ggbOnInit() {
-  /* Oogebra: initiate oogebra on load */
+  /* OoGebra: initiate on load */
   enableOogebra();
   /* End */
 }

@@ -1,17 +1,18 @@
 
-namespace Oogebra {
+namespace OoGebra {
 
   export namespace Core {
 
-    export const version = '1.0';
+    export const version = '2.0';
 
-    export const name = `OogebraCore_{${version}}`
+    export const name = 'OoGebraCore';
 
-    ignoreImmutables(true);
-    setInternal(Core.name);
-    ignoreImmutables(false);
+    export const geoName = `${name}_{${version}}`;
 
-    setImmutable(name, true);
+    setIgnoreImmutables(true);
+    setInternal(Core.geoName);
+    setImmutable(geoName, true);
+    setIgnoreImmutables(false);
 
   }
 

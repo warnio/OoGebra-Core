@@ -1,13 +1,17 @@
 
-namespace Oogebra {
+namespace OoGebra {
 
   const DOUBLE_QUOTE = String.fromCharCode(34);
 
   namespace Data {
 
-    export const version = '1.0';
+    export const version = '2.0';
 
-    export const name = `OogebraData_{${version}}`
+    export const name = `OoGebraData`
+
+    function getElemGeoName(index: number) {
+      return `${name}_{${version}_[${index}]}`;
+    }
 
     const dataEscapeRegex = new RegExp('&|'+DOUBLE_QUOTE, 'g');
 
@@ -41,31 +45,29 @@ namespace Oogebra {
 
     const cache: ({ [key: string]: any } | null)[] = [];
 
-    function ensureDataObject() {
-      if (!ggbApplet.exists(name)) {
-        let listElements = new Array(listLength);
-        for (let i = 0; i < listElements.length; i++) {
-            listElements[i] = DOUBLE_QUOTE + DOUBLE_QUOTE;
-        }
-        ggbApplet.evalCommand(`${name} = {${listElements.join(',')}}`);
+    function ensureDataObject(elemGeoName: string) {
+      if (!ggbApplet.exists(elemGeoName)) {
+        const elemGeoValue = DOUBLE_QUOTE + DOUBLE_QUOTE;
 
-        ignoreImmutables(true);
-        setInternal(Data.name);
-        ignoreImmutables(false);
-        setImmutable(Data.name, true);
+        ggbApplet.evalCommand(`${elemGeoName} = ${elemGeoValue}`);
+        setInternal(elemGeoName);
+        setImmutable(elemGeoName, true);
       }
     }
 
     function ensureCache() {
-      if (cache.length === 0) {
-        const tempObjName = ggbApplet.evalCommandGetLabels(DOUBLE_QUOTE+DOUBLE_QUOTE);
-        for (let i = 0; i < listLength; i++) {
-          const listIndex = i + 1;
-          ggbApplet.evalCommand(`${tempObjName} = ${name}(${listIndex})`);
-          const jsonString = ggbApplet.getValueString(tempObjName) + '';
-          cache[i] = JSON.parse(dataUnescape(jsonString || 'null'));
+      for (let i = 0; i < listLength; i++) {
+        if (cache[i] == null) {
+          const elemGeoName = getElemGeoName(i);
+          if (ggbApplet.exists(elemGeoName)) {
+            const unescapedJsonString = ggbApplet.getValueString(elemGeoName) + '';
+            if (unescapedJsonString) {
+              cache[i] = JSON.parse(dataUnescape(unescapedJsonString));
+            } else {
+              cache[i] = {};
+            }
+          }
         }
-        ggbApplet.deleteObject(tempObjName);
       }
     }
 
@@ -80,43 +82,43 @@ namespace Oogebra {
     }
 
     export function set(key: string, data: any) {
-      ensureDataObject();
+      const prevIgnoreImm = getIgnoreImmutables();
+      setIgnoreImmutables(true);
+
+      const hash = getHash(key);
+      const index = hash & (listLength - 1);
+      const elemGeoName = getElemGeoName(index);
+
+      ensureDataObject(elemGeoName);
       ensureCache();
 
-      let hash = getHash(key);
-      let hashLow = hash & (listLength - 1);
-      let listIndex = hashLow + 1;
-
-      cache[hashLow] = cache[hashLow] || {};
       if (data === undefined) {
-        delete cache[hashLow]![key];
+        delete cache[index]![key];
       } else {
-        cache[hashLow]![key] = data;
+        cache[index]![key] = data;
       }
 
-      const escapedData = dataEscape(JSON.stringify(cache[hashLow]));
-      const command = `SetValue(${name}, ${listIndex}, ${DOUBLE_QUOTE+escapedData+DOUBLE_QUOTE})`;
+      if (Object.keys(cache[index]!).length == 0) {
+        ggbApplet.deleteObject(elemGeoName);
+        setImmutable(elemGeoName, false);
+      } else {
+        const escapedData = dataEscape(JSON.stringify(cache[index]));
+        const command = `${elemGeoName} = ${DOUBLE_QUOTE+escapedData+DOUBLE_QUOTE}`;
+        ggbApplet.evalCommand(command);
+      }
 
-      ignoreImmutables(true);
-      ggbApplet.evalCommand(command);
-      ignoreImmutables(false);
-
-      return ;
+      setIgnoreImmutables(prevIgnoreImm);
     }
 
     export function get(key: string) {
-      ensureDataObject();
+      const hash = getHash(key);
+      const index = hash & (listLength - 1);
+      const elemGeoName = getElemGeoName(index);
+
+      ensureDataObject(elemGeoName);
       ensureCache();
 
-      let hash = getHash(key);
-      let hashLow = hash & (listLength - 1);
-
-      let cacheMapping = cache[hashLow];
-      if (cacheMapping == null) {
-        return null
-      }
-
-      return cacheMapping[key];
+      return cache[index]![key];
     }
 
   }
