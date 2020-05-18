@@ -9,10 +9,13 @@ namespace OoGebra {
 
     export const geoName = `${name}_{${version}}`;
 
-    setIgnoreImmutables(true);
-    setInternal(Core.geoName);
-    setImmutable(geoName, true);
-    setIgnoreImmutables(false);
+    onInit(() => {
+      const prevIgnoreImm = getIgnoreImmutables();
+      setIgnoreImmutables(true);
+      setStyle(Core.geoName, Style.internal);
+      setImmutable(geoName, true);
+      setIgnoreImmutables(prevIgnoreImm);
+    })
 
   }
 

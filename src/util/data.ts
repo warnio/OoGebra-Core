@@ -50,7 +50,7 @@ namespace OoGebra {
         const elemGeoValue = DOUBLE_QUOTE + DOUBLE_QUOTE;
 
         ggbApplet.evalCommand(`${elemGeoName} = ${elemGeoValue}`);
-        setInternal(elemGeoName);
+        setStyle(elemGeoName, Style.internal);
         setImmutable(elemGeoName, true);
       }
     }

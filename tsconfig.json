@@ -11,6 +11,7 @@
   "files": [
     "src/geogebra/index.d.ts",
     "src/util/base.ts",
+    "src/util/style.ts",
     "src/util/listeners.ts",
     "src/util/data.ts",
     "src/util/immutable.ts",

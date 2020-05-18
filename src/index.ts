@@ -1,7 +1,7 @@
 
-namespace OoGebra {
-  log('OoGebra sucessfully loaded!')
-}
+namespace OoGebra { }
+
+OoGebra.init();
 
 declare const global: any;
 if (!global.hasOwnProperty('OoGebra')) {

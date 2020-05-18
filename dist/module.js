@@ -1,6 +1,19 @@
 "use strict";
 var OoGebra;
 (function (OoGebra) {
+    var loadFunctions = [];
+    function onInit(fn) {
+        loadFunctions.push(fn);
+    }
+    OoGebra.onInit = onInit;
+    function init() {
+        for (var _i = 0, loadFunctions_1 = loadFunctions; _i < loadFunctions_1.length; _i++) {
+            var fn = loadFunctions_1[_i];
+            fn();
+        }
+        log('OoGebra sucessfully loaded!');
+    }
+    OoGebra.init = init;
     function getMode() {
         return (ggbApplet.exists('development') && ggbApplet.getValue('development')) ? 'development' : 'production';
     }
@@ -11,12 +24,81 @@ var OoGebra;
         }
     }
     OoGebra.log = log;
-    function setInternal(name) {
-        ggbApplet.setVisible(name, false);
-        ggbApplet.setAuxiliary(name, true);
-        ggbApplet.setFixed(name, true, false);
+})(OoGebra || (OoGebra = {}));
+var OoGebra;
+(function (OoGebra) {
+    var Color = /** @class */ (function () {
+        function Color(red, green, blue) {
+            this.r = red;
+            this.g = green;
+            this.b = blue;
+        }
+        return Color;
+    }());
+    OoGebra.Color = Color;
+    var Style = /** @class */ (function () {
+        function Style() {
+        }
+        Style.internal = Object.freeze({
+            visible: false,
+            trace: false,
+            labelVisible: false,
+            auxiliary: true,
+            fixed: {
+                fixed: true,
+                selectionAllowed: false
+            },
+        });
+        return Style;
+    }());
+    OoGebra.Style = Style;
+    function setStyle(objName, style) {
+        style.visible == null || ggbApplet.setVisible(objName, style.visible);
+        style.layer == null || ggbApplet.setLayer(objName, style.layer);
+        style.trace == null || ggbApplet.setTrace(objName, style.trace);
+        style.labelVisible == null || ggbApplet.setLabelVisible(objName, style.labelVisible);
+        style.labelStyle == null || ggbApplet.setLabelStyle(objName, style.labelStyle);
+        style.lineThickness == null || ggbApplet.setLineThickness(objName, style.lineThickness);
+        style.lineStyle == null || ggbApplet.setLineStyle(objName, style.lineStyle);
+        style.pointSize == null || ggbApplet.setPointSize(objName, style.pointSize);
+        style.pointStyle == null || ggbApplet.setLayer(objName, style.pointStyle);
+        style.color == null || ggbApplet.setColor(objName, style.color.r, style.color.g, style.color.b);
+        style.fillOpacity == null || ggbApplet.setFilling(objName, style.fillOpacity);
+        style.auxiliary == null || ggbApplet.setAuxiliary(objName, style.auxiliary);
+        if (style.fixed != null) {
+            if (style.fixed.selectionAllowed != null) {
+                ggbApplet.setFixed(objName, style.fixed.fixed, style.fixed.selectionAllowed);
+            }
+            else {
+                ggbApplet.setFixed(objName, style.fixed.fixed);
+            }
+        }
     }
-    OoGebra.setInternal = setInternal;
+    OoGebra.setStyle = setStyle;
+    function getStyle(objName) {
+        return {
+            visible: ggbApplet.getVisible(objName),
+            layer: ggbApplet.getLayer(objName),
+            trace: ggbApplet.isTracing(objName),
+            labelVisible: ggbApplet.getLabelVisible(objName),
+            labelStyle: ggbApplet.getLabelStyle(objName),
+            lineThickness: ggbApplet.getLineThickness(objName),
+            lineStyle: ggbApplet.getLineStyle(objName),
+            pointSize: ggbApplet.getPointSize(objName),
+            pointStyle: ggbApplet.getPointStyle(objName),
+            color: getColor(objName),
+            fillOpacity: ggbApplet.getFilling(objName),
+        };
+    }
+    OoGebra.getStyle = getStyle;
+    function getColor(objName) {
+        var colorText = ggbApplet.getColor(objName);
+        var r = parseInt(colorText.slice(1, 3), 16);
+        var g = parseInt(colorText.slice(3, 5), 16);
+        var b = parseInt(colorText.slice(5, 7), 16);
+        return new Color(r, g, b);
+    }
+    OoGebra.getColor = getColor;
 })(OoGebra || (OoGebra = {}));
 var OoGebra;
 (function (OoGebra) {
@@ -78,7 +160,7 @@ var OoGebra;
             if (!ggbApplet.exists(elemGeoName)) {
                 var elemGeoValue = DOUBLE_QUOTE + DOUBLE_QUOTE;
                 ggbApplet.evalCommand(elemGeoName + " = " + elemGeoValue);
-                OoGebra.setInternal(elemGeoName);
+                OoGebra.setStyle(elemGeoName, OoGebra.Style.internal);
                 OoGebra.setImmutable(elemGeoName, true);
             }
         }
@@ -281,16 +363,16 @@ var OoGebra;
         Core.version = '2.0';
         Core.name = 'OoGebraCore';
         Core.geoName = Core.name + "_{" + Core.version + "}";
-        OoGebra.setIgnoreImmutables(true);
-        OoGebra.setInternal(Core.geoName);
-        OoGebra.setImmutable(Core.geoName, true);
-        OoGebra.setIgnoreImmutables(false);
+        OoGebra.onInit(function () {
+            var prevIgnoreImm = OoGebra.getIgnoreImmutables();
+            OoGebra.setIgnoreImmutables(true);
+            OoGebra.setStyle(Core.geoName, OoGebra.Style.internal);
+            OoGebra.setImmutable(Core.geoName, true);
+            OoGebra.setIgnoreImmutables(prevIgnoreImm);
+        });
     })(Core = OoGebra.Core || (OoGebra.Core = {}));
 })(OoGebra || (OoGebra = {}));
-var OoGebra;
-(function (OoGebra) {
-    OoGebra.log('OoGebra sucessfully loaded!');
-})(OoGebra || (OoGebra = {}));
+OoGebra.init();
 if (!global.hasOwnProperty('OoGebra')) {
     Object.defineProperty(global, 'OoGebra', {
         value: OoGebra

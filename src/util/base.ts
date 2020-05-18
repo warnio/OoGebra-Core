@@ -1,6 +1,19 @@
 
 namespace OoGebra {
 
+  const loadFunctions: (() => void)[] = []
+
+  export function onInit(fn: () => void) {
+    loadFunctions.push(fn);
+  }
+
+  export function init() {
+    for (const fn of loadFunctions) {
+      fn();
+    }
+    log('OoGebra sucessfully loaded!');
+  }
+
   export function getMode() {
     return (ggbApplet.exists('development') && ggbApplet.getValue('development')) ? 'development' : 'production';
   }
@@ -9,12 +22,6 @@ namespace OoGebra {
     if (getMode() === 'development') {
       alert(`[Development]: ${message}`);
     }
-  }
-
-  export function setInternal(name: string) {
-    ggbApplet.setVisible(name, false);
-    ggbApplet.setAuxiliary(name, true);
-    ggbApplet.setFixed(name, true, false);
   }
 
 }
