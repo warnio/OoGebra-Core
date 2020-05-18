@@ -107,7 +107,7 @@ namespace OoGebra {
     style.pointSize       == null || ggbApplet.setPointSize     (objName, style.pointSize);
     style.pointStyle      == null || ggbApplet.setLayer         (objName, style.pointStyle);
     style.color           == null || ggbApplet.setColor         (objName, style.color.r, style.color.g, style.color.b);
-    style.fillOpacity  == null || ggbApplet.setFilling       (objName, style.fillOpacity);
+    style.fillOpacity     == null || ggbApplet.setFilling       (objName, style.fillOpacity);
     style.auxiliary       == null || ggbApplet.setAuxiliary     (objName, style.auxiliary);
     if (style.fixed != null) {
       if (style.fixed.selectionAllowed != null) {
@@ -130,7 +130,7 @@ namespace OoGebra {
       pointSize:      ggbApplet.getPointSize(objName) as PointSize,
       pointStyle:     ggbApplet.getPointStyle(objName),
       color:          getColor(objName),
-      fillOpacity: ggbApplet.getFilling(objName),
+      fillOpacity:    ggbApplet.getFilling(objName),
     }
   }
 
