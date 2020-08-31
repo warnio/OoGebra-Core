@@ -1,7 +1,7 @@
 declare namespace OoGebra {
     function onInit(fn: () => void): void;
     function init(): void;
-    function getMode(): "development" | "production";
+    function getMode(): 'development' | 'production';
     function log(message: string): void;
 }
 declare namespace OoGebra {
@@ -54,10 +54,8 @@ declare namespace OoGebra {
         color?: Color;
         fillOpacity?: number;
         auxiliary?: boolean;
-        fixed?: {
-            fixed: boolean;
-            selectionAllowed?: boolean;
-        };
+        fixed?: boolean;
+        selectionAllowed?: boolean;
     }
     interface ObservableStyle {
         visible: boolean;
@@ -91,10 +89,191 @@ declare namespace OoGebra {
     function deleteData(key: string): void;
 }
 declare namespace OoGebra {
+    type GeoReference = number;
+    function getReference(objName: string): number;
+    function getObjName(reference: GeoReference): string;
+}
+declare namespace OoGebra {
     function setImmutable(objName: string, immutable: boolean): void;
     function getImmutable(objName: string): boolean;
     function setIgnoreImmutables(ignore: boolean): void;
     function getIgnoreImmutables(): boolean;
+}
+declare namespace OoGebra {
+    enum GeoType {
+        /** ANGLE */
+        Angle = "angle",
+        /** AXIS */
+        Axis = "axis",
+        /** BOOLEAN */
+        Boolean = "boolean",
+        /** BUTTON */
+        Button = "button",
+        /** TEXTFIELD */
+        TextField = "textfield",
+        /** CONIC */
+        Conic = "conic",
+        /** CONICPART */
+        ConicPart = "conicpart",
+        /** FUNCTION */
+        Function = "function",
+        /** INTERVAL */
+        Interval = "interval",
+        /** IMAGE */
+        Image = "image",
+        /** LINE */
+        Line = "line",
+        /** LIST */
+        List = "list",
+        /** LOCUS */
+        Locus = "locus",
+        /** NUMERIC */
+        Numeric = "numeric",
+        /** POINT */
+        Point = "point",
+        /** POLYGON */
+        Polygon = "polygon",
+        /** RAY */
+        Ray = "ray",
+        /** SEGMENT */
+        Segment = "segment",
+        /** TEXT */
+        Text = "text",
+        /** Formula */
+        Formula = "formula",
+        /** VECTOR */
+        Vector = "vector",
+        /** CURVE_CARTESIAN */
+        CurveCartesian = "curvecartesian",
+        /** IMPLICIT_POLY */
+        ImplicitPoly = "implicitpoly",
+        /** FUNCTION_NVAR */
+        FunctionNVar = "functionnvar",
+        /** POLYLINE */
+        PolyLine = "polyline",
+        /** PENSTROKE */
+        PenStroke = "penstroke",
+        /** TURTLE */
+        Turtle = "turtle",
+        /** CAS_CELL */
+        CasCell = "cascell",
+        /** PLANE */
+        Plane = "plane",
+        /** QUADRIC */
+        Quadric = "quadric",
+        /** POLYHEDRON */
+        Polyhedron = "polyhedron",
+        /** NET */
+        Net = "net",
+        /** SURFACECARTESIAN */
+        Surface = "surface",
+        /** IMPLICIT_SURFACE_ */
+        ImplicitSurface = "implicitsurface",
+        /** CLIPPINGCUBE */
+        ClippingCube3D = "clippingcube3D",
+        /** SPACE */
+        Space = "space",
+        /** AUDIO */
+        Audio = "audio",
+        /** VIDEO */
+        Video = "video",
+        /**
+         * Embedded GeoGebra applet
+         */
+        Embed = "embed",
+        /** DEFAULT */
+        Default = "default",
+        /** SYmbolic row in CAS calc */
+        Symbolic = "symbolic",
+        /** Inline text */
+        InlineText = "inlineText",
+        /** Inline editable table */
+        Table = "table"
+    }
+    class GeoStyle implements Style {
+        readonly geo: Geo;
+        constructor(geo: Geo);
+        assign(style: Style): void;
+        get visible(): boolean;
+        set visible(visible: boolean);
+        get layer(): Layer;
+        set layer(layer: Layer);
+        get trace(): boolean;
+        set trace(flag: boolean);
+        get labelVisible(): boolean;
+        set labelVisible(visible: boolean);
+        get labelStyle(): LabelStyle;
+        set labelStyle(style: LabelStyle);
+        get lineThickness(): LineThickness;
+        set lineThickness(thickness: LineThickness);
+        get lineStyle(): LineStyle;
+        set lineStyle(style: LineStyle);
+        get pointSize(): PointSize;
+        set pointSize(size: PointSize);
+        get pointStyle(): PointStyle;
+        set pointStyle(style: PointStyle);
+        get color(): Color;
+        set color(color: Color);
+        get fillOpacity(): number;
+        set fillOpacity(opacity: number);
+        set fixed(fixed: boolean);
+        set selectionAllowed(selectionAllowed: boolean);
+    }
+    interface Position {
+        x: number;
+        y: number;
+        z: number;
+    }
+    class GeoPosition implements Position {
+        readonly geo: Geo;
+        constructor(geo: Geo);
+        assign(pos: Position, threeDimensional?: boolean): void;
+        setCoords(x: number, y: number, z?: number): void;
+        get x(): number;
+        set x(x: number);
+        get y(): number;
+        set y(y: number);
+        get z(): number;
+        set z(z: number);
+    }
+    class Geo {
+        private __reference;
+        private __position;
+        private __style;
+        constructor(name: string | null, definition: string);
+        rename(newName: string): void;
+        delete(): void;
+        toString(): string;
+        get exists(): boolean;
+        set name(newName: string);
+        get name(): string;
+        set definition(newDefinition: string);
+        get definition(): string;
+        get type(): GeoType;
+        get pos(): GeoPosition;
+        get position(): GeoPosition;
+        get style(): GeoStyle;
+        set value(value: number);
+        get value(): number;
+        set text(text: string);
+        get text(): string;
+        set caption(caption: string);
+        get caption(): string;
+        get description(): string;
+        get isDefined(): boolean;
+        get isIndependent(): boolean;
+        get isMovable(): boolean;
+        set animating(animate: boolean);
+        set animationSpeed(speed: number);
+        setCoords(x: number, y: number, z?: number): void;
+        getCommandString(): string;
+        getFormattedCaption(): string;
+        getLaTeXString(): string;
+        getLaTeXImageBase64(forValueString: boolean): string;
+        private __create;
+        private __createWithoutLabel;
+        private __replaceDefinitionName;
+    }
 }
 declare namespace OoGebra {
     namespace Core {
@@ -103,5 +282,6 @@ declare namespace OoGebra {
         const geoName: string;
     }
 }
-declare namespace OoGebra { }
+declare namespace OoGebra {
+}
 declare const global: any;
