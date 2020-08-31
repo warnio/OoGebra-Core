@@ -6,14 +6,16 @@
   "types": "./index.d.ts",
   "repository": "github:warnio/OoGebra-Core",
   "scripts": {
-    "build": "tsc && npm run beautify && npm run uglify",
+    "build": "tsc && npm run beautify && npm run uglify && npm run ggbify",
     "beautify": "uglifyjs ./dist/module.js -o ./dist/module.ggb.js -b \"quote_style=1\"",
     "uglify": "uglifyjs ./dist/module.js -m -o ./dist/module.ggb.min.js -b \"beautify=false,quote_style=1\"",
+    "ggbify": "replace-in-file \"/\\\"/g\" \"\\\\u0022\" \"**/*.ggb.js,**/*.ggb.min.js\" --isRegex",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dylan Groeneveld",
   "license": "MIT",
   "devDependencies": {
+    "replace-in-file": "^6.1.0",
     "typescript": "^3.9.2",
     "uglify-js": "^3.9.3"
   },
