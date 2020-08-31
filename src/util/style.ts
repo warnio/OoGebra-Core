@@ -57,10 +57,8 @@ namespace OoGebra {
       trace: false,
       labelVisible: false,
       auxiliary: true,
-      fixed: {
-        fixed: true,
-        selectionAllowed: false
-      },
+      fixed: true,
+      selectionAllowed: false
     })
 
     visible?: boolean;
@@ -76,10 +74,8 @@ namespace OoGebra {
     fillOpacity?: number;
 
     auxiliary?: boolean;
-    fixed?: {
-      fixed: boolean;
-      selectionAllowed?: boolean;
-    };
+    fixed?: boolean;
+    selectionAllowed?: boolean;
   }
 
   export interface ObservableStyle {
@@ -97,25 +93,21 @@ namespace OoGebra {
   }
 
   export function setStyle(objName: string, style: Style): void {
-    style.visible         == null || ggbApplet.setVisible       (objName, style.visible);
-    style.layer           == null || ggbApplet.setLayer         (objName, style.layer);
-    style.trace           == null || ggbApplet.setTrace         (objName, style.trace);
-    style.labelVisible    == null || ggbApplet.setLabelVisible  (objName, style.labelVisible);
-    style.labelStyle      == null || ggbApplet.setLabelStyle    (objName, style.labelStyle);
-    style.lineThickness   == null || ggbApplet.setLineThickness (objName, style.lineThickness);
-    style.lineStyle       == null || ggbApplet.setLineStyle     (objName, style.lineStyle);
-    style.pointSize       == null || ggbApplet.setPointSize     (objName, style.pointSize);
-    style.pointStyle      == null || ggbApplet.setLayer         (objName, style.pointStyle);
-    style.color           == null || ggbApplet.setColor         (objName, style.color.r, style.color.g, style.color.b);
-    style.fillOpacity     == null || ggbApplet.setFilling       (objName, style.fillOpacity);
-    style.auxiliary       == null || ggbApplet.setAuxiliary     (objName, style.auxiliary);
-    if (style.fixed != null) {
-      if (style.fixed.selectionAllowed != null) {
-        ggbApplet.setFixed(objName, style.fixed.fixed, style.fixed.selectionAllowed);
-      } else {
-        ggbApplet.setFixed(objName, style.fixed.fixed);
-      }
-    }
+    const isMoveable = ggbApplet.isMoveable(objName);
+    style.visible           == null || ggbApplet.setVisible       (objName, style.visible);
+    style.layer             == null || ggbApplet.setLayer         (objName, style.layer);
+    style.trace             == null || ggbApplet.setTrace         (objName, style.trace);
+    style.labelVisible      == null || ggbApplet.setLabelVisible  (objName, style.labelVisible);
+    style.labelStyle        == null || ggbApplet.setLabelStyle    (objName, style.labelStyle);
+    style.lineThickness     == null || ggbApplet.setLineThickness (objName, style.lineThickness);
+    style.lineStyle         == null || ggbApplet.setLineStyle     (objName, style.lineStyle);
+    style.pointSize         == null || ggbApplet.setPointSize     (objName, style.pointSize);
+    style.pointStyle        == null || ggbApplet.setLayer         (objName, style.pointStyle);
+    style.color             == null || ggbApplet.setColor         (objName, style.color.r, style.color.g, style.color.b);
+    style.fillOpacity       == null || ggbApplet.setFilling       (objName, style.fillOpacity);
+    style.auxiliary         == null || ggbApplet.setAuxiliary     (objName, style.auxiliary);
+    style.fixed             == null || ggbApplet.setFixed         (objName, style.fixed);
+    style.selectionAllowed  == null || ggbApplet.setFixed         (objName, style.fixed ?? !isMoveable, style.selectionAllowed);
   }
 
   export function getStyle(objName: string): ObservableStyle {

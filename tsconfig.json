@@ -14,8 +14,11 @@
     "src/util/style.ts",
     "src/util/listeners.ts",
     "src/util/data.ts",
+    "src/util/reference.ts",
     "src/util/immutable.ts",
+    "src/geo.ts",
     "src/core.ts",
-    "src/index.ts"
+    "src/module.ts",
+    "src/load.ts"
   ]
 }

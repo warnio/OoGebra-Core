@@ -14,7 +14,7 @@ namespace OoGebra {
     log('OoGebra sucessfully loaded!');
   }
 
-  export function getMode() {
+  export function getMode(): 'development' | 'production' {
     return (ggbApplet.exists('development') && ggbApplet.getValue('development')) ? 'development' : 'production';
   }
 
