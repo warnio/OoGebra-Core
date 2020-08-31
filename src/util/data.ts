@@ -1,34 +1,71 @@
 
 namespace OoGebra {
 
-  const DOUBLE_QUOTE = String.fromCharCode(34);
-
   namespace Data {
 
-    export const version = '2.0';
+    export const version = '3.0';
 
     export const name = `OoGebraData`
 
-    function getElemGeoName(index: number) {
-      return `${name}_{${version}_[${index}]}`;
+    const dataObjNameRegex = /^OoGebraData_\{3\.0_\[([^}]*)]}$/
+
+    function isData(objName: string) {
+      return dataObjNameRegex.test(objName);
     }
 
-    const dataEscapeRegex = new RegExp('&|'+DOUBLE_QUOTE, 'g');
+    function getDataKey(objName: string) {
+      const match = dataObjNameRegex.exec(objName);
+      if (match == null) return null;
+      return keyUnescape(match[1]);
+    }
 
-    const dataEscapeReplacer = (match: string) => {
+    function getKeyObjName(key: string) {
+      const escapedKey = keyEscape(key);
+      return `${name}_{${version}_[${escapedKey}]}`;
+    }
+
+    const keyEscapeRegex = /&|}/g
+
+    const keyEscapeReplacer = (match: string) => {
       switch (match) {
-        case DOUBLE_QUOTE: return '&q';
+        case '}': return '&c';
         default: return '&a';
       }
     }
 
-    const dataUnescapeRegex = new RegExp('&q|&a', 'g');
+    const keyUnescapeRegex = /&c|&a/g
+
+    const keyUnescapeReplacer = (match: string) => {
+      switch (match) {
+        case '&c': return '}';
+        default: return '&';
+      }
+    }
+
+    const dataEscapeRegex = /&|"/g
+
+    const dataEscapeReplacer = (match: string) => {
+      switch (match) {
+        case '"': return '&q';
+        default: return '&a';
+      }
+    }
+
+    const dataUnescapeRegex = /&q|&a/g
 
     const dataUnescapeReplacer = (match: string) => {
       switch (match) {
-        case '&q': return DOUBLE_QUOTE;
+        case '&q': return '"';
         default: return '&';
       }
+    }
+
+    function keyEscape (string: string) {
+      return string.replace(keyEscapeRegex, keyEscapeReplacer);
+    }
+
+    function keyUnescape (string: string) {
+      return string.replace(keyUnescapeRegex, keyUnescapeReplacer);
     }
 
     function dataEscape (string: string) {
@@ -39,86 +76,59 @@ namespace OoGebra {
       return string.replace(dataUnescapeRegex, dataUnescapeReplacer);
     }
 
-    const indexBits = 8;
-
-    const listLength = Math.pow(2, indexBits);
-
-    const cache: ({ [key: string]: any } | null)[] = [];
-
-    function ensureDataObject(elemGeoName: string) {
-      if (!ggbApplet.exists(elemGeoName)) {
-        const elemGeoValue = DOUBLE_QUOTE + DOUBLE_QUOTE;
-
-        ggbApplet.evalCommand(`${elemGeoName} = ${elemGeoValue}`);
-        setStyle(elemGeoName, Style.internal);
-        setImmutable(elemGeoName, true);
-      }
-    }
+    let cache: { [key: string]: any } | null = null;
 
     function ensureCache() {
-      for (let i = 0; i < listLength; i++) {
-        if (cache[i] == null) {
-          const elemGeoName = getElemGeoName(i);
-          if (ggbApplet.exists(elemGeoName)) {
-            const unescapedJsonString = ggbApplet.getValueString(elemGeoName) + '';
-            if (unescapedJsonString) {
-              cache[i] = JSON.parse(dataUnescape(unescapedJsonString));
-            } else {
-              cache[i] = {};
-            }
+      if (cache == null) {
+        cache = {};
+        const objNames = ggbApplet.getAllObjectNames();
+        for (const objName of objNames) {
+          if (isData(objName+'')) {
+            const key = getDataKey(objName+'')!;
+            const data = JSON.parse(dataUnescape(ggbApplet.getValueString(objName+'')+''));
+            cache![key] = data;
           }
         }
       }
-    }
-
-    function getHash(str: string) {
-      let hash = 0, i: number, chr: number;
-      for (i = 0; i < str.length; i++) {
-        chr   = str.charCodeAt(i);
-        hash  = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
-      }
-      return hash;
     }
 
     export function set(key: string, data: any) {
       const prevIgnoreImm = getIgnoreImmutables();
       setIgnoreImmutables(true);
 
-      const hash = getHash(key);
-      const index = hash & (listLength - 1);
-      const elemGeoName = getElemGeoName(index);
-
-      ensureDataObject(elemGeoName);
       ensureCache();
+      cache![key] = data;
 
-      if (data === undefined) {
-        delete cache[index]![key];
-      } else {
-        cache[index]![key] = data;
-      }
+      const objName = getKeyObjName(key);
+      const escapedData = dataEscape(JSON.stringify(data));
+      const objDidNotExist = !ggbApplet.exists(objName);
+      const command = `${objName} = "${escapedData}"`;
+      ggbApplet.evalCommand(command);
 
-      if (Object.keys(cache[index]!).length == 0) {
-        ggbApplet.deleteObject(elemGeoName);
-        setImmutable(elemGeoName, false);
-      } else {
-        const escapedData = dataEscape(JSON.stringify(cache[index]));
-        const command = `${elemGeoName} = ${DOUBLE_QUOTE+escapedData+DOUBLE_QUOTE}`;
-        ggbApplet.evalCommand(command);
+      if (objDidNotExist) {
+        setStyle(objName, Style.internal);
+        setImmutable(objName, true);
       }
 
       setIgnoreImmutables(prevIgnoreImm);
     }
 
     export function get(key: string) {
-      const hash = getHash(key);
-      const index = hash & (listLength - 1);
-      const elemGeoName = getElemGeoName(index);
-
-      ensureDataObject(elemGeoName);
       ensureCache();
+      return cache![key];
+    }
 
-      return cache[index]![key];
+    export function del(key: string) {
+      const prevIgnoreImm = getIgnoreImmutables();
+      setIgnoreImmutables(true);
+
+      ensureCache();
+      delete cache![key];
+
+      const objName = getKeyObjName(key);
+      ggbApplet.deleteObject(objName);
+
+      setIgnoreImmutables(prevIgnoreImm);
     }
 
   }
@@ -132,7 +142,7 @@ namespace OoGebra {
   }
 
   export function deleteData(key: string) {
-    return Data.set(key, undefined);
+    return Data.del(key);
   }
 
 }
