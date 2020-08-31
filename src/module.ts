@@ -1,10 +1,10 @@
 
 namespace OoGebra {
 
-  const OnAdd = 'a73e022e-55a8-4305-a36e-c15bc38847ce';
-  const OnUpdate = '4d75fcd2-4729-463c-82d2-4039ad436460';
-  const OnRename = '8bde32d9-7c95-4ef9-8c69-f5c390db0da7';
-  const OnRemove = '81c6e4dd-c99a-41eb-b485-dc5b134ee5ea';
+  const onAddListenerName = 'a73e022e-55a8-4305-a36e-c15bc38847ce';
+  const onUpdateListenerName = '4d75fcd2-4729-463c-82d2-4039ad436460';
+  const onRenameListenerName = '8bde32d9-7c95-4ef9-8c69-f5c390db0da7';
+  const onRemoveListenerName = '81c6e4dd-c99a-41eb-b485-dc5b134ee5ea';
 
   const moduleRegex = /^OoGebraModule_\{([^}]+)}$/
   const objNames = ggbApplet.getAllObjectNames();
@@ -85,13 +85,13 @@ namespace OoGebra {
     Register.remove(objName+'');
   }
 
-  const OnAddListener = registerListener(OnAdd, onAdd);
-  const OnUpdateListener = registerListener(OnUpdate, onUpdate);
-  const OnRenameListener = registerListener(OnRename, onRename);
-  const OnRemoveListener = registerListener(OnRemove, onRemove);
-  ggbApplet.registerAddListener(OnAddListener);
-  ggbApplet.registerUpdateListener(OnUpdateListener);
-  ggbApplet.registerRenameListener(OnRenameListener);
-  ggbApplet.registerRemoveListener(OnRemoveListener);
+  const onAddListener = registerListener(onAddListenerName, onAdd);
+  const onUpdateListener = registerListener(onUpdateListenerName, onUpdate);
+  const onRenameListener = registerListener(onRenameListenerName, onRename);
+  const onRemoveListener = registerListener(onRemoveListenerName, onRemove);
+  ggbApplet.registerAddListener(onAddListener);
+  ggbApplet.registerUpdateListener(onUpdateListener);
+  ggbApplet.registerRenameListener(onRenameListener);
+  ggbApplet.registerRemoveListener(onRemoveListener);
 
 }

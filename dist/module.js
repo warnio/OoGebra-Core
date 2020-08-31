@@ -240,11 +240,11 @@ var OoGebra;
 })(OoGebra || (OoGebra = {}));
 var OoGebra;
 (function (OoGebra) {
-    var LastRef = '865482c3-64ff-429e-9793-62a6f38808e2';
-    var NameToRefMap = 'bff1a578-02d2-4dbe-97fc-4a160b6326cd';
-    var RefToNameMap = '0c60bcd5-fd1a-45ee-b539-991beebf8afd';
-    var OnRename = 'f40190fe-c057-4993-a8f4-90bd4392d44b';
-    var OnRemove = 'be12c789-55cd-4ff6-b881-255d13765277';
+    var lastRefKey = '865482c3-64ff-429e-9793-62a6f38808e2';
+    var nameToRefMapKey = 'bff1a578-02d2-4dbe-97fc-4a160b6326cd';
+    var refToNameMapKey = '0c60bcd5-fd1a-45ee-b539-991beebf8afd';
+    var onRenameListenerName = 'f40190fe-c057-4993-a8f4-90bd4392d44b';
+    var onRemoveListenerName = 'be12c789-55cd-4ff6-b881-255d13765277';
     var lastRef;
     var nameToRefMap;
     var refToNameMap;
@@ -282,62 +282,62 @@ var OoGebra;
             updateData();
         }
     }
-    var onRenameListener = OoGebra.registerListener(OnRename, onRename);
-    var onRemoveListener = OoGebra.registerListener(OnRemove, onRemove);
+    var onRenameListener = OoGebra.registerListener(onRenameListenerName, onRename);
+    var onRemoveListener = OoGebra.registerListener(onRemoveListenerName, onRemove);
     ggbApplet.registerRenameListener(onRenameListener);
     ggbApplet.registerRemoveListener(onRemoveListener);
     function updateData() {
-        OoGebra.setData(LastRef, lastRef);
-        OoGebra.setData(NameToRefMap, nameToRefMap);
-        OoGebra.setData(RefToNameMap, refToNameMap);
+        OoGebra.setData(lastRefKey, lastRef);
+        OoGebra.setData(nameToRefMapKey, nameToRefMap);
+        OoGebra.setData(refToNameMapKey, refToNameMap);
     }
     OoGebra.onInit(function () {
         var _a, _b, _c;
-        lastRef = (_a = OoGebra.getData(LastRef)) !== null && _a !== void 0 ? _a : 0;
-        nameToRefMap = (_b = OoGebra.getData(NameToRefMap)) !== null && _b !== void 0 ? _b : {};
-        refToNameMap = (_c = OoGebra.getData(RefToNameMap)) !== null && _c !== void 0 ? _c : {};
+        lastRef = (_a = OoGebra.getData(lastRefKey)) !== null && _a !== void 0 ? _a : 0;
+        nameToRefMap = (_b = OoGebra.getData(nameToRefMapKey)) !== null && _b !== void 0 ? _b : {};
+        refToNameMap = (_c = OoGebra.getData(refToNameMapKey)) !== null && _c !== void 0 ? _c : {};
     });
 })(OoGebra || (OoGebra = {}));
 var OoGebra;
 (function (OoGebra) {
     var Immutable;
     (function (Immutable) {
-        var Key = 'b31ef8a7-d6de-439c-a283-6dddd9c96ca7';
-        var OnRename = 'f08a8677-3c6a-4c03-a051-cb15c374a502';
-        var OnClick = 'dbe3e5b4-0a23-49a8-89fa-f298ee2218aa';
-        var OnUpdate = '28092476-efaa-4244-a580-87ab358a46ae';
-        var OnRemove = '1a2bfcbb-7d60-44af-8813-038769db62f3';
-        var OnClient = '0e0bcdc3-a558-49a6-8a4e-87b4dae99cf8';
+        var immutableObjNamesKey = 'b31ef8a7-d6de-439c-a283-6dddd9c96ca7';
+        var onRenameListenerName = 'f08a8677-3c6a-4c03-a051-cb15c374a502';
+        var onClickListenerName = 'dbe3e5b4-0a23-49a8-89fa-f298ee2218aa';
+        var onUpdateListenerName = '28092476-efaa-4244-a580-87ab358a46ae';
+        var onRemoveListenerName = '1a2bfcbb-7d60-44af-8813-038769db62f3';
+        var onClientListenerName = '0e0bcdc3-a558-49a6-8a4e-87b4dae99cf8';
         Immutable.ignoreExplicitly = false;
         function shouldIgnoreImmutable() {
             return OoGebra.getMode() === "development" || Immutable.ignoreExplicitly;
         }
-        var OnRenameListener = OoGebra.registerListener(OnRename, function (oldObjName, _objName) {
+        var onRenameListener = OoGebra.registerListener(onRenameListenerName, function (oldObjName, _objName) {
             oldObjName += '';
             _objName += '';
             if (!shouldIgnoreImmutable() && getImmutable(oldObjName)) {
                 ggbApplet.undo();
             }
         });
-        var OnClickListener = OoGebra.registerListener(OnClick, function (objName) {
+        var onClickListener = OoGebra.registerListener(onClickListenerName, function (objName) {
             objName += '';
             if (!shouldIgnoreImmutable() && getImmutable(objName)) {
                 ggbApplet.setUndoPoint();
             }
         });
-        var OnUpdateListener = OoGebra.registerListener(OnUpdate, function (objName) {
+        var onUpdateListener = OoGebra.registerListener(onUpdateListenerName, function (objName) {
             objName += '';
             if (!shouldIgnoreImmutable() && getImmutable(objName)) {
                 ggbApplet.undo();
             }
         });
-        var OnRemoveListener = OoGebra.registerListener(OnRemove, function (objName) {
+        var onRemoveListener = OoGebra.registerListener(onRemoveListenerName, function (objName) {
             objName += '';
             if (!shouldIgnoreImmutable() && getImmutable(objName)) {
                 ggbApplet.undo();
             }
         });
-        var OnClientListener = OoGebra.registerListener(OnClient, function (type, target, _argument) {
+        var onClientListener = OoGebra.registerListener(onClientListenerName, function (type, target, _argument) {
             type += '';
             target += '';
             _argument += '';
@@ -352,11 +352,11 @@ var OoGebra;
         });
         function getObjNames() {
             var _a;
-            return (_a = OoGebra.getData(Key)) !== null && _a !== void 0 ? _a : [];
+            return (_a = OoGebra.getData(immutableObjNamesKey)) !== null && _a !== void 0 ? _a : [];
         }
         Immutable.getObjNames = getObjNames;
         function setObjNames(objNames) {
-            OoGebra.setData(Key, objNames);
+            OoGebra.setData(immutableObjNamesKey, objNames);
         }
         Immutable.setObjNames = setObjNames;
         function registerObjName(objNames, objName, immutable) {
@@ -371,19 +371,19 @@ var OoGebra;
         }
         Immutable.registerObjName = registerObjName;
         function register() {
-            ggbApplet.registerRenameListener(OnRenameListener);
-            ggbApplet.registerClickListener(OnClickListener);
-            ggbApplet.registerUpdateListener(OnUpdateListener);
-            ggbApplet.registerRemoveListener(OnRemoveListener);
-            ggbApplet.registerClientListener(OnClientListener);
+            ggbApplet.registerRenameListener(onRenameListener);
+            ggbApplet.registerClickListener(onClickListener);
+            ggbApplet.registerUpdateListener(onUpdateListener);
+            ggbApplet.registerRemoveListener(onRemoveListener);
+            ggbApplet.registerClientListener(onClientListener);
         }
         Immutable.register = register;
         function unregister() {
-            ggbApplet.unregisterRenameListener(OnRenameListener);
-            ggbApplet.unregisterClickListener(OnClickListener);
-            ggbApplet.unregisterUpdateListener(OnUpdateListener);
-            ggbApplet.unregisterRemoveListener(OnRemoveListener);
-            ggbApplet.unregisterClientListener(OnClientListener);
+            ggbApplet.unregisterRenameListener(onRenameListener);
+            ggbApplet.unregisterClickListener(onClickListener);
+            ggbApplet.unregisterUpdateListener(onUpdateListener);
+            ggbApplet.unregisterRemoveListener(onRemoveListener);
+            ggbApplet.unregisterClientListener(onClientListener);
         }
         Immutable.unregister = unregister;
         function load() {
@@ -920,10 +920,10 @@ var OoGebra;
 })(OoGebra || (OoGebra = {}));
 var OoGebra;
 (function (OoGebra) {
-    var OnAdd = 'a73e022e-55a8-4305-a36e-c15bc38847ce';
-    var OnUpdate = '4d75fcd2-4729-463c-82d2-4039ad436460';
-    var OnRename = '8bde32d9-7c95-4ef9-8c69-f5c390db0da7';
-    var OnRemove = '81c6e4dd-c99a-41eb-b485-dc5b134ee5ea';
+    var onAddListenerName = 'a73e022e-55a8-4305-a36e-c15bc38847ce';
+    var onUpdateListenerName = '4d75fcd2-4729-463c-82d2-4039ad436460';
+    var onRenameListenerName = '8bde32d9-7c95-4ef9-8c69-f5c390db0da7';
+    var onRemoveListenerName = '81c6e4dd-c99a-41eb-b485-dc5b134ee5ea';
     var moduleRegex = /^OoGebraModule_\{([^}]+)}$/;
     var objNames = ggbApplet.getAllObjectNames();
     var geval = eval;
@@ -993,14 +993,14 @@ var OoGebra;
     function onRemove(objName) {
         Register.remove(objName + '');
     }
-    var OnAddListener = OoGebra.registerListener(OnAdd, onAdd);
-    var OnUpdateListener = OoGebra.registerListener(OnUpdate, onUpdate);
-    var OnRenameListener = OoGebra.registerListener(OnRename, onRename);
-    var OnRemoveListener = OoGebra.registerListener(OnRemove, onRemove);
-    ggbApplet.registerAddListener(OnAddListener);
-    ggbApplet.registerUpdateListener(OnUpdateListener);
-    ggbApplet.registerRenameListener(OnRenameListener);
-    ggbApplet.registerRemoveListener(OnRemoveListener);
+    var onAddListener = OoGebra.registerListener(onAddListenerName, onAdd);
+    var onUpdateListener = OoGebra.registerListener(onUpdateListenerName, onUpdate);
+    var onRenameListener = OoGebra.registerListener(onRenameListenerName, onRename);
+    var onRemoveListener = OoGebra.registerListener(onRemoveListenerName, onRemove);
+    ggbApplet.registerAddListener(onAddListener);
+    ggbApplet.registerUpdateListener(onUpdateListener);
+    ggbApplet.registerRenameListener(onRenameListener);
+    ggbApplet.registerRemoveListener(onRemoveListener);
 })(OoGebra || (OoGebra = {}));
 if (!global.hasOwnProperty('OoGebra')) {
     Object.defineProperty(global, 'OoGebra', {

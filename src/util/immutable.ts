@@ -2,13 +2,13 @@
 namespace OoGebra {
 
   namespace Immutable {
-    const Key = 'b31ef8a7-d6de-439c-a283-6dddd9c96ca7';
+    const immutableObjNamesKey = 'b31ef8a7-d6de-439c-a283-6dddd9c96ca7';
 
-    const OnRename = 'f08a8677-3c6a-4c03-a051-cb15c374a502';
-    const OnClick  = 'dbe3e5b4-0a23-49a8-89fa-f298ee2218aa';
-    const OnUpdate = '28092476-efaa-4244-a580-87ab358a46ae';
-    const OnRemove = '1a2bfcbb-7d60-44af-8813-038769db62f3';
-    const OnClient = '0e0bcdc3-a558-49a6-8a4e-87b4dae99cf8';
+    const onRenameListenerName = 'f08a8677-3c6a-4c03-a051-cb15c374a502';
+    const onClickListenerName  = 'dbe3e5b4-0a23-49a8-89fa-f298ee2218aa';
+    const onUpdateListenerName = '28092476-efaa-4244-a580-87ab358a46ae';
+    const onRemoveListenerName = '1a2bfcbb-7d60-44af-8813-038769db62f3';
+    const onClientListenerName = '0e0bcdc3-a558-49a6-8a4e-87b4dae99cf8';
 
     export let ignoreExplicitly = false;
 
@@ -16,35 +16,35 @@ namespace OoGebra {
       return getMode() === "development" || ignoreExplicitly;
     }
 
-    const OnRenameListener = registerListener(OnRename, (oldObjName: string, _objName: string) => {
+    const onRenameListener = registerListener(onRenameListenerName, (oldObjName: string, _objName: string) => {
       oldObjName += ''; _objName += '';
       if (!shouldIgnoreImmutable() && getImmutable(oldObjName)) {
         ggbApplet.undo();
       }
     })
 
-    const OnClickListener = registerListener(OnClick, (objName: string) => {
+    const onClickListener = registerListener(onClickListenerName, (objName: string) => {
       objName += '';
       if (!shouldIgnoreImmutable() && getImmutable(objName)) {
         ggbApplet.setUndoPoint();
       }
     })
 
-    const OnUpdateListener = registerListener(OnUpdate, (objName: string) => {
+    const onUpdateListener = registerListener(onUpdateListenerName, (objName: string) => {
       objName += '';
       if (!shouldIgnoreImmutable() && getImmutable(objName)) {
         ggbApplet.undo();
       }
     })
 
-    const OnRemoveListener = registerListener(OnRemove, (objName: string) => {
+    const onRemoveListener = registerListener(onRemoveListenerName, (objName: string) => {
       objName += '';
       if (!shouldIgnoreImmutable() && getImmutable(objName)) {
         ggbApplet.undo();
       }
     })
 
-    const OnClientListener = registerListener(OnClient, (type: string, target: string, _argument: string) => {
+    const onClientListener = registerListener(onClientListenerName, (type: string, target: string, _argument: string) => {
       type += ''; target += ''; _argument += '';
       if (!shouldIgnoreImmutable() && getImmutable(target)) {
         if (type === 'updateStyle') {
@@ -57,11 +57,11 @@ namespace OoGebra {
     })
 
     export function getObjNames() {
-      return getData(Key) ?? [];
+      return getData(immutableObjNamesKey) ?? [];
     }
 
     export function setObjNames(objNames: string[]) {
-      setData(Key, objNames);
+      setData(immutableObjNamesKey, objNames);
     }
 
     export function registerObjName(objNames: string[], objName: string, immutable: boolean) {
@@ -75,19 +75,19 @@ namespace OoGebra {
     }
 
     export function register() {
-      ggbApplet.registerRenameListener(OnRenameListener);
-      ggbApplet.registerClickListener (OnClickListener);
-      ggbApplet.registerUpdateListener(OnUpdateListener);
-      ggbApplet.registerRemoveListener(OnRemoveListener);
-      ggbApplet.registerClientListener(OnClientListener);
+      ggbApplet.registerRenameListener(onRenameListener);
+      ggbApplet.registerClickListener (onClickListener);
+      ggbApplet.registerUpdateListener(onUpdateListener);
+      ggbApplet.registerRemoveListener(onRemoveListener);
+      ggbApplet.registerClientListener(onClientListener);
     }
 
     export function unregister() {
-      ggbApplet.unregisterRenameListener(OnRenameListener);
-      ggbApplet.unregisterClickListener (OnClickListener);
-      ggbApplet.unregisterUpdateListener(OnUpdateListener);
-      ggbApplet.unregisterRemoveListener(OnRemoveListener);
-      ggbApplet.unregisterClientListener(OnClientListener);
+      ggbApplet.unregisterRenameListener(onRenameListener);
+      ggbApplet.unregisterClickListener (onClickListener);
+      ggbApplet.unregisterUpdateListener(onUpdateListener);
+      ggbApplet.unregisterRemoveListener(onRemoveListener);
+      ggbApplet.unregisterClientListener(onClientListener);
     }
 
     function load() {
