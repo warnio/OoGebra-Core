@@ -5,6 +5,7 @@ namespace OoGebra {
     const Key = 'b31ef8a7-d6de-439c-a283-6dddd9c96ca7';
 
     const OnRename = 'f08a8677-3c6a-4c03-a051-cb15c374a502';
+    const OnClick  = 'dbe3e5b4-0a23-49a8-89fa-f298ee2218aa';
     const OnUpdate = '28092476-efaa-4244-a580-87ab358a46ae';
     const OnRemove = '1a2bfcbb-7d60-44af-8813-038769db62f3';
     const OnClient = '0e0bcdc3-a558-49a6-8a4e-87b4dae99cf8';
@@ -16,24 +17,35 @@ namespace OoGebra {
     }
 
     const OnRenameListener = registerListener(OnRename, (oldObjName: string, _objName: string) => {
+      oldObjName += ''; _objName += '';
       if (!shouldIgnoreImmutable() && getImmutable(oldObjName)) {
         ggbApplet.undo();
       }
     })
 
+    const OnClickListener = registerListener(OnClick, (objName: string) => {
+      objName += '';
+      if (!shouldIgnoreImmutable() && getImmutable(objName)) {
+        ggbApplet.setUndoPoint();
+      }
+    })
+
     const OnUpdateListener = registerListener(OnUpdate, (objName: string) => {
+      objName += '';
       if (!shouldIgnoreImmutable() && getImmutable(objName)) {
         ggbApplet.undo();
       }
     })
 
     const OnRemoveListener = registerListener(OnRemove, (objName: string) => {
+      objName += '';
       if (!shouldIgnoreImmutable() && getImmutable(objName)) {
         ggbApplet.undo();
       }
     })
 
     const OnClientListener = registerListener(OnClient, (type: string, target: string, _argument: string) => {
+      type += ''; target += ''; _argument += '';
       if (!shouldIgnoreImmutable() && getImmutable(target)) {
         if (type === 'updateStyle') {
           ggbApplet.undo();
@@ -45,7 +57,7 @@ namespace OoGebra {
     })
 
     export function getObjNames() {
-      return getData(Key) || [];
+      return getData(Key) ?? [];
     }
 
     export function setObjNames(objNames: string[]) {
@@ -64,6 +76,7 @@ namespace OoGebra {
 
     export function register() {
       ggbApplet.registerRenameListener(OnRenameListener);
+      ggbApplet.registerClickListener (OnClickListener);
       ggbApplet.registerUpdateListener(OnUpdateListener);
       ggbApplet.registerRemoveListener(OnRemoveListener);
       ggbApplet.registerClientListener(OnClientListener);
@@ -71,12 +84,13 @@ namespace OoGebra {
 
     export function unregister() {
       ggbApplet.unregisterRenameListener(OnRenameListener);
+      ggbApplet.unregisterClickListener (OnClickListener);
       ggbApplet.unregisterUpdateListener(OnUpdateListener);
       ggbApplet.unregisterRemoveListener(OnRemoveListener);
       ggbApplet.unregisterClientListener(OnClientListener);
     }
 
-    export function load() {
+    function load() {
       let immutableObjNames: string[] = getObjNames();;
 
       if (immutableObjNames.length > 0) {
@@ -86,10 +100,11 @@ namespace OoGebra {
       }
     }
 
+    load();
+
   }
 
   export function setImmutable(objName: string, immutable: boolean) {
-
     let immObjNames: string[] = Immutable.getObjNames();
 
     const noImmutableObjNamesBefore = immObjNames.length == 0;
@@ -112,18 +127,17 @@ namespace OoGebra {
   }
 
   export function setIgnoreImmutables(ignore: boolean) {
+    let immutableObjNames: string[] = Immutable.getObjNames();;
     Immutable.ignoreExplicitly = ignore;
-    if (ignore) {
+    if (ignore || immutableObjNames.length === 0) {
       Immutable.unregister();
     } else {
-      Immutable.load();
+      Immutable.register();
     }
   }
 
   export function getIgnoreImmutables() {
     return Immutable.ignoreExplicitly;
   }
-
-  Immutable.load();
 
 }
